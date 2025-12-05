@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Monthly Summary{% endblock %}
+
+{% block content %}
+<h2>Monthly Sales Summary</h2>
+
+
+
+<!-- Sub Navigation for Reports -->
+<ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'payment_report' %}">Payments</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'customer_report' %}">Customer Wise</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'product_report' %}">Product Wise</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'invoice_report' %}">Invoice Wise</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="{% url 'monthly_report' %}">Monthly Summary</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'outstanding_report' %}">Outstanding</a>
+    </li>
+</ul>
+
+<a href="{% url 'monthly-report-csv' %}?date_from={{ date_from }}&date_to={{ date_to }}"
+class="btn btn-outline-primary">
+    Download CSV
+</a>
+
+<form method="get" class="row g-3 mb-4 mt-3">
+    <div class="col-md-3">
+        <label class="form-label">From Date</label>
+        <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">To Date</label>
+        <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Filter</button>
+    </div>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Year-Month</th>
+            <th>No. of Invoices</th>
+            <th>Total Invoice Amount</th>
+            <th>Total Paid</th>
+            <th>Total Balance</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in summary %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ row.year }}</td>
+            <td>{{ row.month }}</td>
+            <td>{{ row.invoice_count }}</td>
+            <td>{{ row.total_invoice_amount }}</td>
+            <td>{{ row.total_paid }}</td>
+            <td>{{ row.total_balance }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" class="text-center">No data found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
